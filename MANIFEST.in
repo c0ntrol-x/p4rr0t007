@@ -1,0 +1,1 @@
+include COPYING *.txt *.rst docs/* docs/build/* docs/build/doctrees/* docs/build/html/* docs/build/html/_sources/* docs/build/html/_static/* docs/build/html/_static/css/* docs/build/html/_static/fonts/* docs/build/html/_static/js/* docs/source/* docs/source/_static/* docs/source/_templates/* docs/source/_webroot/*

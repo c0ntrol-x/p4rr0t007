@@ -1,0 +1,7 @@
+*#*
+*.pyc
+*~
+.*#*
+.coverage
+dist/
+docs/build/

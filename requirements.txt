@@ -1,0 +1,14 @@
+Flask-Login==0.2.11
+Flask==0.10.1
+Pillow==4.0.0
+coloredlogs==5.0
+flask-session==0.2.3
+gunicorn==19.4.5
+plant==0.1.2
+pyotp==2.2.4
+qrcode==5.3
+htmlmin==0.1.10
+nicelog==0.2.1
+python-dateutil==2.6.0
+pytz==2016.10
+redis==2.10.5
