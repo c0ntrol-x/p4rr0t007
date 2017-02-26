@@ -4,6 +4,7 @@ import sys
 
 import os
 from setuptools import setup
+from setuptools import find_packages
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -16,16 +17,14 @@ dependencies = filter(bool, map(bytes.strip, local_file('requirements.txt').spli
 # https://setuptools.readthedocs.io/en/latest/setuptools.html#adding-setup-arguments
 setup(
     name='p4rr0t007',
-    version='0.1.6',
+    version='0.1.7',
     description="\n".join([
         'h1gh lEv3l fl4sk 4 h4x0rs'
     ]),
     author=u"Ð4√¡η¢Ч",
     author_email='d4v1ncy@protonmail.ch',
     url=u'https://github.com/c0ntrol-x/p4rr0t007',
-    packages=[
-        'p4rr0t007',
-    ],
+    packages=find_packages(exclude=['*tests*']),
     install_requires=dependencies,
     include_package_data=True,
     package_data={
