@@ -5,12 +5,12 @@ import os
 import json
 import hashlib
 import logging
-import traceback
+# import traceback
 
 import htmlmin
 
 from flask import Flask, Response, request, render_template, url_for
-from flask.ext.session import Session
+from flask_session import Session
 
 
 from p4rr0t007 import settings
