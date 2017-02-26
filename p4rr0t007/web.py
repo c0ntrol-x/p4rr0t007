@@ -8,7 +8,7 @@ import logging
 # import traceback
 
 import htmlmin
-
+from collections import OrderedDict
 from flask import Flask, Response, request, render_template, url_for
 from flask_session import Session
 
@@ -47,12 +47,13 @@ class Application(Flask):
         return Response(payload, status=code, headers=headers)
 
     def template_response(self, name, context=None, content_type='text/html', code=200, minify=True):
-        context = context or {}
+        context = OrderedDict(context or {})
+        context['json'] = json
         context['full_url_for'] = full_url_for
         context['seed'] = xor(
             hashlib.sha512("".join((repr(request.headers), repr(request.url), repr(request.method), repr(request.cookies)))).digest(),
             os.urandom(128),
-        ).encode('hex')[27:60]
+        ).encode('hex')[32]
 
         utf8 = render_template(name, **context)
         if minify:
