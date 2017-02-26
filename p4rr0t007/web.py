@@ -25,16 +25,16 @@ def full_url_for(*args, **kw):
 
 
 class Application(Flask):
-    def __init__(self, app_node):
+    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings'):
         super(Application, self).__init__(
             __name__,
-            static_folder=app_node.dir.join('static/dist'),
-            template_folder=app_node.dir.join('templates')
+            static_folder=static_folder or app_node.dir.join('static/dist'),
+            template_folder=template_folder or app_node.dir.join('templates')
         )
-        self.config.from_object('p4rr0t007.settings')
+        self.config.from_object(settings_module)
         self.app_node = app_node
         self.sesh = Session(self)
-        self.secret_key = settings.SECRET_KEY
+        self.secret_key = self.config['SECRET_KEY']
 
     def json_handle_weird(self, obj):
         logging.warning("failed to serialize %s", obj)

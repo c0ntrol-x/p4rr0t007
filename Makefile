@@ -22,7 +22,7 @@ docs:
 	(cd docs && make linkcheck html)
 
 
-build: clean docs
+build: clean
 	python setup.py sdist
 	@(cd dist && tar xzvf ${PACKAGE_NAME}-${VERSION}.tar.gz)
 
