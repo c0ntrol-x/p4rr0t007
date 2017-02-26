@@ -22,7 +22,7 @@ setup(
     ]),
     author=u"Ð4√¡η¢Ч",
     author_email='d4v1ncy@protonmail.ch',
-    url=u'https://github.com/d4v1ncy/P4rr0t007',
+    url=u'https://github.com/c0ntrol-x/p4rr0t007',
     packages=[
         'p4rr0t007',
     ],
