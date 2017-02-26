@@ -19,12 +19,12 @@ clean:
 	@echo "version = '${VERSION}'" > p4rr0t007/version.py
 
 docs:
-	cd docs && make linkcheck html
+	(cd docs && make linkcheck html)
 
 
 build: clean docs
 	python setup.py sdist
-	@cd dist && tar xzvf dist/${PACKAGE_NAME}-${VERSION}.tar.gz
+	@(cd dist && tar xzvf ${PACKAGE_NAME}-${VERSION}.tar.gz)
 
 release: tests build
 	-@twine register -r d4v1ncy dist/${PACKAGE_NAME}-${VERSION}.tar.gz
