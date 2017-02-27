@@ -51,9 +51,9 @@ class Application(Flask):
         context['json'] = json
         context['full_url_for'] = full_url_for
         context['seed'] = xor(
-            hashlib.sha512("".join((repr(request.headers), repr(request.url), repr(request.method), repr(request.cookies)))).digest(),
-            os.urandom(128),
-        ).encode('hex')[32]
+            hashlib.sha256("".join((repr(request.headers), request.data, repr(request.url), repr(request.method), repr(request.cookies)))).digest(),
+            os.urandom(64),
+        ).encode('hex')
 
         utf8 = render_template(name, **context)
         if minify:
