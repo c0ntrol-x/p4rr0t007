@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-
+import sys
 import json
 import hashlib
 import logging
-# import traceback
+import traceback
 
 import htmlmin
 from collections import OrderedDict
@@ -25,16 +25,17 @@ def full_url_for(*args, **kw):
 
 
 class Application(Flask):
-    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings'):
+    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings', logger_name='p4rr0t007'):
         super(Application, self).__init__(
             __name__,
-            static_folder=static_folder or app_node.dir.join('static/dist'),
-            template_folder=template_folder or app_node.dir.join('templates')
+            static_folder=os.path.expanduser(static_folder or app_node.dir.join('static/dist')),
+            template_folder=os.path.expanduser(template_folder or app_node.dir.join('templates')),
         )
         self.config.from_object(settings_module)
         self.app_node = app_node
         self.sesh = Session(self)
         self.secret_key = self.config['SECRET_KEY']
+        self.log = logging.getLogger(logger_name)
 
     def json_handle_weird(self, obj):
         logging.warning("failed to serialize %s", obj)
@@ -75,7 +76,7 @@ class Application(Flask):
         try:
             data = json.loads(request.data)
         except ValueError:
-            logging.exception(
+            self.log.exception(
                 "Trying to parse json body in the %s to %s",
                 request.method, request.url,
             )
@@ -84,6 +85,6 @@ class Application(Flask):
         return data
 
     def handle_exception(self, e):
-        # tb = traceback.format_exc(e)
-        logging.exception('failed to handle {} {}'.format(request.method, request.url))
+        sys.stderr.write(traceback.format_exc(e))
+        self.log.exception('failed to handle {} {}'.format(request.method, request.url))
         return self.template_response('500.html', code=500)

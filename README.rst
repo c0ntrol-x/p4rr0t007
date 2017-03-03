@@ -48,8 +48,8 @@ create an ``index.html`` template
     EOF
 
 
-create an ``index.html`` template
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create the flask app using p4rr0t007.Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 .. code:: python
@@ -61,9 +61,15 @@ create an ``index.html`` template
    from datetime import datetime
    from p4rr0t007.web import Application
 
-   node = Node(__file__)
-   server = Application(node)
 
+   node = Node(__file__)
+
+   server = Application(
+       node,
+       static_folder='~/yourapp/static'.
+       template_folder='~/yourapp/templates'.
+       settings_module='yourapp.config',
+   )
 
    @server.route('/')
    def html():
