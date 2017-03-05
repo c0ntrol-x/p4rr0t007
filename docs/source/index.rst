@@ -10,6 +10,7 @@ Welcome to p4rr0t007's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   api
 
 
 Indices and tables

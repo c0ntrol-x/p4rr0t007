@@ -18,10 +18,12 @@
 #
 import os
 import sys
-
+reload(sys)
+sys.setdefaultencoding('utf-8')
 local_path = lambda *path: os.path.join(os.path.dirname(os.path.abspath(__file__)), *path)
 
 sys.path.insert(0, local_path('..', '..'))
+
 
 from p4rr0t007.version import version
 
@@ -178,7 +180,10 @@ epub_copyright = copyright
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
 
-
-
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/', None),
+    'redis': ('https://redis-py.readthedocs.org/en/latest/', None),
+    'requests': ('http://docs.python-requests.org/en/master/', None),
+    'flask': ('http://flask.pocoo.org/docs/0.12/', None),
+    'zmq': ('https://pyzmq.readthedocs.org/en/latest/', None),
+}

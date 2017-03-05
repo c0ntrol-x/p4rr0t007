@@ -5,6 +5,12 @@ import logging
 from itertools import imap
 from nicelog.formatters import Colorful
 
+"""
+core library for p4rr0t007
+
+by importing this module the current python runtime is forcefully set to UTF-8 as default encoding - that is to prevent unicode issues.
+"""
+
 DEFAULT_ENCODING = 'utf-8'
 
 # enforce utf-8
@@ -13,10 +19,14 @@ sys.setdefaultencoding(DEFAULT_ENCODING)
 
 
 def utf8(string):
+    """raw bytes and returns a ``unicode`` instance encoded in UTF-8.
+    """
     return string.encode('utf-8', 'ignore')
 
 
 def colorize_logger(logger, stream=None, level=logging.DEBUG):
+    """resets the handlers and formatters in a given logger, and sets it up with Colorful() logs
+    """
     logger.handlers = []
     logger.filters = []
     stream = stream or sys.stderr
@@ -27,18 +37,33 @@ def colorize_logger(logger, stream=None, level=logging.DEBUG):
     return logger
 
 
-def get_logger(name=None, level=logging.DEBUG):
+def get_logger(name=None, level=logging.DEBUG, stream=None):
+    """returns a colorized logger. This function can be used just like
+    :py:func:`logging.getLogger` except you can set the level right
+    away."""
     logger = logging.getLogger(name)
-    colored = colorize_logger(logger)
+    colored = colorize_logger(logger, stream=stream, level=level)
     return colored
 
 
 def is_valid_python_name(string=None):
+    """takes a string and validates whether it's a valid python variable
+    name (i.e: case-insentitive alpha-numerics, starting with a letter or
+    underscore.
+
+    :param string:
+    :returns: bool
+
+    """
     string = string or br''
     return re.match(r'^[a-zA-Z_][\w_]*$', string) is not None
 
 
 def python_object_name(item, module=True):
+    """takes a python object and returns its import path.
+    :param item: the source object
+    :param module: bool - defaults to ``True`` - whether the object name should be prefixed by its module name.
+    """
     if not isinstance(item, type):
         return python_object_name(type(item))
 
@@ -46,6 +71,7 @@ def python_object_name(item, module=True):
 
 
 def typeof(item):
+    """returns a string with the type of an object"""
     return repr(type(item))
 
 
@@ -53,22 +79,55 @@ __internal_attr_regex__ = re.compile(r'^__(?P<attr>[a-zA-z_]\w)')
 
 
 def string_to_int(s):
+    """converts a string to a base-10 integer
+    :param s: a string
+    :returns: a base-10 integer with the string contents (useful before xoring)
+    """
     return int(bytes(s).encode('hex'), 16)
 
 
-def lpad(s, length, char='\0'):
-    return s.rjust(length, char)
+def lpad(s, N, char='\0'):
+    """pads a string to the left with null-bytes or any other given character.
+
+    ..note:: This is used by the :py:func:`xor` function.
+
+    :param s: the string
+    :param N: an integer of how much padding should be done
+    :returns: the original bytes
+    """
+    assert isinstance(char, bytes) and len(char) == 1, 'char should be a string with length 1'
+    return s.rjust(N, char)
 
 
-def rpad(s, length, char='\0'):
-    return s.ljust(length, char)
+def rpad(s, N, char='\0'):
+    """pads a string to the right with null-bytes or any other given character.
+
+    ..note:: This is used by the :py:func:`xor` function.
+
+    :param s: the string
+    :param N: an integer of how much padding should be done
+    :returns: the original bytes
+    """
+    assert isinstance(char, bytes) and len(char) == 1, 'char should be a string with length 1'
+    return s.ljust(N, char)
 
 
 def int_to_string(i):
-    return format(int(i), 'x')
+    """takes any integer and returns a string with the bytes represented.
+    This is used by the :py:func:`xor` function.
+    :param i: an integer
+    :returns: the original bytes
+    """
+    return format(int(i), 'x').decode('hex')
 
 
 def xor(left, right):
+    """xor 2 strings. They can be shorter than each other, in which case
+    the shortest will be padded with null bytes at its right.
+
+    :param left: a string to be the left side of the xor
+    :param right: a string to be the left side of the xor
+    """
     maxlength = max(map(len, (left, right)))
 
     ileft = string_to_int(rpad(left, maxlength))
@@ -77,11 +136,12 @@ def xor(left, right):
     return int_to_string(xored)
 
 
-def slugify(string):
-    return re.sub(r'\W+', '_', string.strip()).lower()
-
 
 def is_internal_attribute(name):
+    """
+    :param name:
+    :returns: bool if the name starts with two underscores and also matches :py:func:`is_valid_python_name`
+    """
     return __internal_attr_regex__.match(name) is not None
 
 
@@ -102,6 +162,7 @@ class ObjectKeyError(KeyError):
 
 
 class ObjectDict(dict):
+    """a dot-dict"""
     def __init__(self, *args, **kw):
         self.__ordered_keys = []
         super(ObjectDict, self).__init__(*args, **kw)
@@ -149,6 +210,9 @@ class ObjectDict(dict):
 
 
 class BinaryString(bytes):
+    """a string that can be converted back-and-forth to integer, xored
+    with other strings and so on."""
+
     @classmethod
     def from_int(cls, value):
         return cls(hex(value).decode('hex'))
@@ -201,6 +265,7 @@ class BinaryString(bytes):
 
 
 class String(unicode):
+    """a unicode string that can be slugified"""
     __options__ = {}
 
     def __init__(self, data):
@@ -236,7 +301,12 @@ def force_unicode(s):
     return SafeString(s)
 
 
-def slugify_string(name, repchar):
+def slugify(string, repchar='_'):
+    """replaces all non-alphanumeric chars in the string with the given repchar.
+
+    :param string: the source string
+    :param repchar:
+    """
     slug_regex = re.compile(r'(^[{0}._-]+|[^a-z-A-Z0-9_.-]+|[{0}._-]+$)'.format(repchar))
     strip_regex = re.compile(r'[{0}._-]+'.format(repchar))
 
@@ -246,12 +316,16 @@ def slugify_string(name, repchar):
         lambda x: x.strip(repchar),
         lambda x: x.lower(),
     ]
-    result = name
+    result = string
     for process in transformations:
         result = process(result)
 
     return result
 
 
-def nonempty_string(string):
-    return isinstance(string, basestring) and len(string.strip()) > 0
+def nonempty_string(obj):
+    """
+    :param obj: a python object that will be checked to be a subclass of ``basestring``
+    :returns: True if the object is a string and is not empty
+    """
+    return isinstance(obj, basestring) and len(obj.strip()) > 0
