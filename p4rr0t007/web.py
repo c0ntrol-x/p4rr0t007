@@ -81,10 +81,6 @@ class Application(Flask):
         context = OrderedDict(context or {})
         context['json'] = json
         context['full_url_for'] = full_url_for
-        context['seed'] = xor(
-            hashlib.sha256("".join((repr(request.headers), request.data, repr(request.url), repr(request.method), repr(request.cookies)))).digest(),
-            os.urandom(64),
-        ).encode('hex')
 
         utf8 = render_template(name, **context)
         if minify:
@@ -133,7 +129,8 @@ class Application(Flask):
     def handle_exception(self, e):
         """called by flask when an exception happens. p4rr0t007 always returns
         a 500.html response that must exist under the given
-        ``template_folder`` constructor param."""
+        ``template_folder`` constructor param.
+        """
         sys.stderr.write("p4rr0t007 handled an error:")
         sys.stderr.write(traceback.format_exc(e))
         sys.stderr.flush()

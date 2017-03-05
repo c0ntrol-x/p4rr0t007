@@ -116,9 +116,9 @@ def int_to_string(i):
     """takes any integer and returns a string with the bytes represented.
     This is used by the :py:func:`xor` function.
     :param i: an integer
-    :returns: the original bytes
+    :returns: a hex-encoded string
     """
-    return format(int(i), 'x').decode('hex')
+    return format(int(i), 'x')
 
 
 def xor(left, right):
