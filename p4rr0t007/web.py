@@ -13,6 +13,7 @@ from flask import Response
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask import session as flask_session
 from flask_session import Session
 
 from jinja2.exceptions import TemplateError
@@ -54,7 +55,7 @@ class Application(Flask):
     def session(self):
         """access the global session dictionary. For configuration info check out the `flask-session <https://pythonhosted.org/Flask-Session/>`_ documentation.
         """
-        return self.sesh
+        return flask_session
 
     def json_handle_weird(self, obj):
         logging.warning("failed to serialize %s", obj)
