@@ -3,7 +3,6 @@
 import os
 import sys
 import json
-import hashlib
 import logging
 import traceback
 
@@ -19,7 +18,6 @@ from flask_session import Session
 from jinja2.exceptions import TemplateError
 
 from p4rr0t007 import settings
-from p4rr0t007.lib.core import xor
 
 
 def full_url_for(*args, **kw):
@@ -51,6 +49,12 @@ class Application(Flask):
         self.sesh = Session(self)
         self.secret_key = self.config['SECRET_KEY']
         self.log = logging.getLogger(logger_name)
+
+    @property
+    def session(self):
+        """access the global session dictionary. For configuration info check out the `flask-session <https://pythonhosted.org/Flask-Session/>`_ documentation.
+        """
+        return self.sesh
 
     def json_handle_weird(self, obj):
         logging.warning("failed to serialize %s", obj)
