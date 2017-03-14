@@ -1,5 +1,5 @@
 PACKAGE_NAME	:= p4rr0t007
-VERSION		:= 0.1.17
+VERSION		:= 0.2.0
 export VERSION
 export PACKAGE_NAME
 
