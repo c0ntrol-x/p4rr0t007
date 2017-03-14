@@ -19,6 +19,7 @@ from flask_session import Session
 from jinja2.exceptions import TemplateError
 
 from p4rr0t007 import settings
+from p4rr0t007.lib.core import get_logger
 
 
 def full_url_for(*args, **kw):
@@ -33,7 +34,7 @@ class Application(Flask):
     methods to handle ``application/json`` requests and responses.
     """
 
-    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings', error_template_name='500.html', logger_name='p4rr0t007', **kw):
+    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings', error_template_name='500.html', logger_name='p4rr0t007', logger=None, **kw):
         template_folder = os.path.expanduser(template_folder or app_node.dir.join('templates'))
         static_folder = os.path.expanduser(static_folder or app_node.dir.join('static/dist'))
         super(Application, self).__init__(
@@ -49,7 +50,10 @@ class Application(Flask):
         self.app_node = app_node
         self.sesh = Session(self)
         self.secret_key = self.config['SECRET_KEY']
-        self.log = logging.getLogger(logger_name)
+        if isinstance(logger, logging.Logger):
+            self.log = logger
+        else:
+            self.log = get_logger(logger_name)
 
     @property
     def session(self):
@@ -58,7 +62,7 @@ class Application(Flask):
         return flask_session
 
     def json_handle_weird(self, obj):
-        logging.warning("failed to serialize %s", obj)
+        self.log.warning("failed to serialize %s", obj)
         return bytes(obj)
 
     def json_response(self, data, code=200, indent=2, headers={}):
