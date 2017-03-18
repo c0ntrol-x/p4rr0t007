@@ -15,6 +15,7 @@ from flask import request
 from flask import url_for
 from flask import session as flask_session
 from flask_session import Session
+from flask_reggie import Reggie
 
 from jinja2.exceptions import TemplateError
 
@@ -49,6 +50,7 @@ class Application(Flask):
         self.config.from_object(settings_module)
         self.app_node = app_node
         self.sesh = Session(self)
+        self.reggie = Reggie(self)
         self.secret_key = self.config['SECRET_KEY']
         if isinstance(logger, logging.Logger):
             self.log = logger
