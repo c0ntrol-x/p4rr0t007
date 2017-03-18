@@ -17,7 +17,7 @@ dependencies = filter(bool, map(bytes.strip, local_file('requirements.txt').spli
 # https://setuptools.readthedocs.io/en/latest/setuptools.html#adding-setup-arguments
 setup(
     name='p4rr0t007',
-    version='0.2.0',
+    version='0.2.1',
     description="\n".join([
         'h1gh lEv3l fl4sk 4 h4x0rs'
     ]),
