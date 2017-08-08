@@ -35,7 +35,7 @@ class Application(Flask):
     methods to handle ``application/json`` requests and responses.
     """
 
-    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings', error_template_name='500.html', logger_name='p4rr0t007', logger=None, **kw):
+    def __init__(self, app_node, static_folder=None, template_folder=None, settings_module='p4rr0t007.settings', error_template_name='500.html', logger_name='p4rr0t007', logger=None, secret_key=None, **kw):
         template_folder = os.path.expanduser(template_folder or app_node.dir.join('templates'))
         static_folder = os.path.expanduser(static_folder or app_node.dir.join('static/dist'))
         super(Application, self).__init__(
@@ -51,7 +51,7 @@ class Application(Flask):
         self.app_node = app_node
         self.sesh = Session(self)
         self.reggie = Reggie(self)
-        self.secret_key = self.config['SECRET_KEY']
+        self.secret_key = secret_key or self.config['SECRET_KEY']
         if isinstance(logger, logging.Logger):
             self.log = logger
         else:
